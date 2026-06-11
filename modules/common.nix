@@ -32,4 +32,6 @@
   systemd.settings.Manager = {
     DefaultTimeoutStopSec = "30s";
   };
+
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 }
