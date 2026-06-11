@@ -1,0 +1,3 @@
+creation_rules:
+  - path_regex: (sops-secrets|modules/secrets)/.*
+    pgp: B24FB304E0C551CC
