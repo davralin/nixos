@@ -19,6 +19,7 @@
       mierin   = mkHost "mierin";
       home-nas = mkHost "home-nas";
       away-nas = mkHost "away-nas";
+      isam     = mkHost "isam";
     };
   };
 }
