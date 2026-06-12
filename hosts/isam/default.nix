@@ -23,12 +23,8 @@
   # ZFS encrypted pool — passphrase entered at boot
   boot.zfs.requestEncryptionCredentials = true;
 
-  # LUKS swap — unlocked via keyfile on ZFS persist
-  boot.initrd.luks.devices."swap" = {
-    device = "/dev/disk/by-uuid/39c1ad40-2bb8-41ec-9658-6ce0fcb70902";
-    keyFile = "/nix/persist/swap.key";
-    keyFileSize = 4096;
-  };
+  # No swap for VM (LUKS swap with ZFS keyfile has boot ordering issues)
+  # For real hardware with hibernation, see laptop config
 
   # ZFS impermanence: rollback root to blank snapshot on each boot
   # Uses systemd initrd service (required with systemd stage 1)
