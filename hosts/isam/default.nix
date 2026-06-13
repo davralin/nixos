@@ -24,9 +24,8 @@
     allowDiscards = true;
   };
 
-  # ZFS data pool — auto-import with force (to handle hostid mismatches from ISO usage)
+  # ZFS data pool — auto-import; pool hostId has been fixed to match isam (66cb2f3d)
   boot.zfs.extraPools = [ "rpool" ];
-  boot.zfs.forceImportAll = true;
   # Key is at keylocation=file:///nix/persist/zfs.key on the encrypted ext4 /nix
   # NixOS ZFS infrastructure loads it automatically when /nix is mounted
 
