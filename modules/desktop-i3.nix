@@ -26,6 +26,7 @@
   # Flatpak — for Buffer
   services.flatpak.enable = true;
   xdg.portal.enable = true;
+  xdg.portal.config.common.default = "*";
 
   # Steam
   programs.steam.enable = true;
@@ -61,7 +62,7 @@
 
     # Tray / session
     networkmanagerapplet
-    lxde.lxsession    # lxpolkit
+    lxsession             # lxpolkit
     udiskie
     unclutter-xfixes
     xautolock
