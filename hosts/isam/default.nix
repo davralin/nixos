@@ -4,7 +4,7 @@
   imports = [
     ./hardware-configuration.nix
     ../../modules/common.nix
-    ../../modules/impermanence-zfs.nix
+    ../../modules/impermanence-root.nix
     ../../modules/locale.nix
     ../../modules/mikr.nix
     ../../modules/ssh.nix
@@ -17,28 +17,27 @@
   networking.hostName = "isam";
   networking.hostId = "66cb2f3d";
 
-  # Use systemd in initrd (required for boot.initrd.systemd.services)
-  boot.initrd.systemd.enable = true;
+  # LUKS2 container — single passphrase unlocks the LVM VG
+  boot.initrd.luks.devices."cryptroot" = {
+    device = "/dev/disk/by-partlabel/cryptroot";
+    allowDiscards = true;
+  };
 
-  # ZFS encrypted pool — passphrase entered at boot
-  boot.zfs.requestEncryptionCredentials = true;
+  # ZFS data pool — auto-import, key loaded by systemd service below
+  boot.zfs.extraPools = [ "rpool" ];
 
-  # No swap for VM (LUKS swap with ZFS keyfile has boot ordering issues)
-  # For real hardware with hibernation, see laptop config
-
-  # ZFS impermanence: rollback root to blank snapshot on each boot
-  # Uses systemd initrd service (required with systemd stage 1)
-  boot.initrd.systemd.services.rollback = {
-    description = "Rollback ZFS root to blank snapshot";
-    wantedBy = [ "initrd.target" ];
-    after = [ "zfs-import-rpool.service" ];
-    before = [ "sysroot.mount" ];
-    path = [ pkgs.zfs ];
-    unitConfig.DefaultDependencies = "no";
-    serviceConfig.Type = "oneshot";
-    script = ''
-      zfs rollback -r rpool/root@blank
-    '';
+  # Load ZFS encryption key from keyfile on encrypted ext4 /nix
+  # Runs after ZFS pool is imported, before datasets are mounted
+  systemd.services.zfs-load-key = {
+    description = "Load ZFS encryption keys";
+    after = [ "zfs-import.target" ];
+    before = [ "zfs-mount.service" ];
+    wantedBy = [ "zfs-mount.service" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = "${config.boot.zfs.package}/bin/zfs load-key -r -a";
+    };
   };
 
   boot.loader.systemd-boot.enable = true;

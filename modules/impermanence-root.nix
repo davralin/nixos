@@ -14,8 +14,10 @@
       "/opt"
       "/var/log"
       "/var/lib/acme"
+      "/var/cache/fontconfig"
       "/var/lib/bluetooth"
       "/var/lib/dnsmasq"
+      "/var/lib/fwupd"
       "/var/lib/nixos"
     ];
     files = [
