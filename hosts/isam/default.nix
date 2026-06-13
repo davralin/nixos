@@ -32,6 +32,11 @@
   # Serial console for VM — ttyS0 last = preferred for input (LUKS passphrase reads from it)
   boot.kernelParams = [ "console=tty1" "console=ttyS0,115200n8" ];
 
+  # Hibernation — swap is on LVM-on-LUKS (/dev/mapper/base-swap, ~10G > 8G RAM)
+  # boot.resumeDevice alone doesn't suppress nohibernate for dm paths; must disable protectKernelImage
+  boot.resumeDevice = "/dev/mapper/base-swap";
+  security.protectKernelImage = false;
+
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
