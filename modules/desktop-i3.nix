@@ -23,6 +23,15 @@
   security.pam.services.lightdm.enableGnomeKeyring = true;
   services.gnome.gnome-keyring.enable = true;
 
+  # Audio — PipeWire with PulseAudio compatibility
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+  };
+
   # Flatpak — for Buffer
   services.flatpak.enable = true;
   xdg.portal.enable = true;
@@ -30,6 +39,9 @@
 
   # Steam
   programs.steam.enable = true;
+
+  # Brightness without sudo
+  hardware.brillo.enable = true;
 
   # Thunar + plugins
   programs.thunar.enable = true;
@@ -64,21 +76,28 @@
     networkmanagerapplet
     lxsession             # lxpolkit
     udiskie
-    unclutter-xfixes
+    unclutter-xfixes      # installs as 'unclutter'
     xautolock
 
     # Input / X utils
     xdotool
     brightnessctl
 
-    # Audio control (no PipeWire yet, but useful when added)
+    # Audio
     pavucontrol
+    pulseaudio            # provides pactl for i3blocks volume script
+
+    # i3blocks script deps
+    yad                   # calendar popup (cal.sh)
+    sysstat               # mpstat for cpu_usage
+    bc                    # math for mem.sh
+    acpi                  # battery info for batterybar.sh
   ];
 
   # Home-manager — desktop user config for mikr
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    users.mikr = import ../home/mikr/desktop.nix;
+    users.mikr = import ../home/mikr/desktop-i3.nix;
   };
 }

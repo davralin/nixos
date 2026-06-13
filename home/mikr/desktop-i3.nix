@@ -160,6 +160,381 @@
     longitude = 10.7;
   };
 
+  # --- i3blocks ---
+  home.file.".config/i3blocks/up.conf".text = ''
+    separator_block_width=10
+    align=center
+
+    # Quotes from Wheel of Time
+    [wot]
+    command=~/.config/i3blocks/scripts/wot.sh
+    interval=300
+
+    # Show date and calendar
+    [cal]
+    command=~/.config/i3blocks/scripts/cal.sh
+    interval=1
+  '';
+
+  home.file.".config/i3blocks/down.conf".text = ''
+    separator_block_width=10
+    align=center
+    separator=true
+
+    # Screen brightness
+    [brightness]
+    command=~/.config/i3blocks/scripts/brightness.sh
+    label=
+    interval=5
+    min_width=100%
+
+    # Volume indicator
+    [volume]
+    command=~/.config/i3blocks/scripts/volume.sh
+    instance=Master
+    interval=once
+    signal=10
+
+    # Wireguard interface monitoring
+    [wireguard]
+    command=~/.config/i3blocks/scripts/wireguard.sh
+    interval=30
+    separator=true
+
+    # Network interface monitoring
+    [iface]
+    command=~/.config/i3blocks/scripts/iface.sh
+    interval=5
+    separator=true
+
+    # Disk usage
+    [disk]
+    command=~/.config/i3blocks/scripts/disk.sh
+    label=/
+    instance=/
+    interval=30
+    separator=false
+    [disk]
+    command=~/.config/i3blocks/scripts/disk.sh
+    label=~
+    instance=/home
+    interval=30
+
+    # MEM usage bar
+    [membar]
+    command=~/.config/i3blocks/scripts/mem.sh
+    label=mem:
+    align=left
+    interval=10
+    markup=pango
+    min_width=mem: ■■■■■
+
+    # CPU usage bar
+    [cpubar]
+    command=~/.config/i3blocks/scripts/cpu.sh
+    label=
+    align=left
+    interval=5
+    markup=pango
+    min_width= ■■■■■
+
+    # Battery indicator
+    [batterybar]
+    command=~/.config/i3blocks/scripts/batterybar.sh
+    label=⚡
+    align=left
+    interval=30
+    markup=pango
+    min_width=⚡ ■■■■■
+
+    # Key indicators
+    [keyindicator]
+    command=~/.config/i3blocks/scripts/keyindicator.sh
+    instance=CAPS
+    interval=once
+    signal=11
+  '';
+
+  # i3blocks scripts
+  home.file.".config/i3blocks/scripts/wot.sh" = {
+    executable = true;
+    text = ''
+      #!/bin/bash
+      curl -s https://wotquotes.com/ \
+        | grep quotescollection-2 \
+        | cut -d'>' -f4 \
+        | cut -d'<' -f1 \
+        | sed -r -e 's/&#8230;/.../g' -e "s/&#8217;/'/g" \
+               -e 's/,\.\.\./\.\.\./g' -e 's/\. \. \. \./\.\.\.\./g' \
+               -e 's:<br />: :g'
+    '';
+  };
+
+  home.file.".config/i3blocks/scripts/cal.sh" = {
+    executable = true;
+    text = ''
+      #!/bin/sh
+      WIDTH=''${WIDTH:-200}
+      HEIGHT=''${HEIGHT:-200}
+      DATEFMT=''${DATEFMT:-"+  W:%V %Y-%m-%d  %H:%M:%S"}
+      SHORTFMT=''${SHORTFMT:-"+%H:%M:%S"}
+
+      case "$BLOCK_BUTTON" in
+        1|2|3)
+          posX=$(($BLOCK_X - $WIDTH / 2))
+          i3-msg -q "exec LANG=nb_NO.utf8 yad --calendar \
+            --width=$WIDTH --height=$HEIGHT \
+            --undecorated --fixed \
+            --close-on-unfocus --no-buttons \
+            --show-weeks \
+            --posx=$posX --posy=24 \
+            > /dev/null"
+      esac
+      echo "$LABEL$(date "$DATEFMT")"
+      echo "$LABEL$(date "$SHORTFMT")"
+    '';
+  };
+
+  home.file.".config/i3blocks/scripts/brightness.sh" = {
+    executable = true;
+    text = ''
+      #!/bin/bash
+      if [[ "$BLOCK_BUTTON" -eq 1 ]]; then
+        brightnessctl set 1% > /dev/null
+      elif [[ "$BLOCK_BUTTON" -eq 2 ]]; then
+        brightnessctl set 20% > /dev/null
+      elif [[ "$BLOCK_BUTTON" -eq 3 ]]; then
+        brightnessctl set 70% > /dev/null
+      fi
+      BRIGHTNESS=$(brightnessctl | grep Current | cut -d'(' -f2 | cut -d')' -f1)
+      if [ "$(brightnessctl --list | grep backlight)" ]; then
+        echo $BRIGHTNESS
+        echo $BRIGHTNESS
+      fi
+    '';
+  };
+
+  home.file.".config/i3blocks/scripts/volume.sh" = {
+    executable = true;
+    text = ''
+      #!/bin/bash
+      VOL=$(pactl get-sink-volume @DEFAULT_SINK@ | grep -oP '\d+%' | head -1)
+      MUTE=$(pactl get-sink-mute @DEFAULT_SINK@ | grep -oP '(yes|no)')
+      if [[ "$MUTE" == "yes" ]]; then
+        echo " $VOL"
+      else
+        echo " $VOL"
+      fi
+    '';
+  };
+
+  home.file.".config/i3blocks/scripts/wireguard.sh" = {
+    executable = true;
+    text = ''
+      #!/bin/bash
+      for i in $(sudo find /etc/wireguard/ -iname '*.conf' \
+                   | sed 's:/etc/wireguard/::g' | sed 's/.conf//g')
+      do
+        sudo wg show $i >/dev/null 2>&1
+        if [ $? -eq 0 ]; then
+          echo ""
+          echo ""
+        else
+          echo "$i"
+          echo "$i"
+          echo \#FF0000
+        fi
+      done
+    '';
+  };
+
+  home.file.".config/i3blocks/scripts/iface.sh" = {
+    executable = true;
+    text = ''
+      #!/bin/bash
+      if [[ -n $BLOCK_INSTANCE ]]; then
+        IF=$BLOCK_INSTANCE
+      else
+        IF=$(ip route | awk '/^default/ { print $5 ; exit }')
+      fi
+
+      if [[ "$BLOCK_BUTTON" -eq 1 ]]; then
+        PUBLICIP=$(curl -s https://icanhazip.com)
+        notify-send -u low "Public IP is: $PUBLICIP"
+        echo $PUBLICIP | xclip -selection clipboard
+        PRIVATEIP=$(ip a | grep $(ip route | awk '/^default/ { print $5 }') \
+          | grep inet | awk '{ print $2 }' | awk -F '/' '{ print $1 }')
+        notify-send -u low "Private IP is: $PRIVATEIP"
+      fi
+
+      if [[ "$(cat /sys/class/net/$IF/operstate)" = 'up' ]]; then
+        echo ""
+        echo ""
+      elif [[ "$(cat /sys/class/net/$IF/operstate)" = 'unknown' ]]; then
+        echo ""
+        echo ""
+        echo \#00FF00
+      else
+        echo ""
+        echo ""
+        echo \#FF0000
+      fi
+    '';
+  };
+
+  home.file.".config/i3blocks/scripts/disk.sh" = {
+    executable = true;
+    text = ''
+      #!/bin/bash
+      INSTANCE=''${BLOCK_INSTANCE:-/}
+      df -h "$INSTANCE" | awk 'NR==2 { print $4 " / " $2 }'
+    '';
+  };
+
+  home.file.".config/i3blocks/scripts/mem.sh" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      if [[ "$BLOCK_BUTTON" -eq 1 ]]; then
+        topproc=$(ps ax --sort=-pmem --format 'command=' \
+          | head -n 1 | cut -f1 -d' ' | awk -F" +|/" '{print $NF}')
+        echo "<span foreground=\"#FFD000\">$topproc</span>"
+      else
+        memavailable=$(awk '/MemAvailable/ { printf "%.3f \n", $2/1024/1024 }' /proc/meminfo)
+        memtotal=$(awk '/MemTotal/ { printf "%.3f \n", $2/1024/1024 }' /proc/meminfo)
+        output=$(echo "scale=5; 100 - (($memavailable / $memtotal) * 100)" | bc | cut -f1 -d'.')
+        if   [[ "$output" -lt 20 ]]; then color="#ADFF00"; squares="■"
+        elif [[ "$output" -lt 40 ]]; then color="#E4FF00"; squares="■■"
+        elif [[ "$output" -lt 60 ]]; then color="#FFD000"; squares="■■■"
+        elif [[ "$output" -lt 80 ]]; then color="#FFB923"; squares="■■■■"
+        else                              color="#FF0027"; squares="■■■■■"
+        fi
+        echo "<span foreground=\"$color\">$squares</span>"
+      fi
+    '';
+  };
+
+  home.file.".config/i3blocks/scripts/cpu_usage" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/perl
+      use strict;
+      use warnings;
+      use utf8;
+      use Getopt::Long;
+
+      my $t_warn = 50;
+      my $t_crit = 80;
+      my $cpu_usage = -1;
+
+      GetOptions("w=i" => \$t_warn, "c=i" => \$t_crit);
+
+      $ENV{LC_ALL} = "en_US";
+      open(MPSTAT, 'mpstat 1 1 |') or die;
+      while (<MPSTAT>) {
+        if (/^Average.*\s+(\d+\.\d+)/) {
+          $cpu_usage = 100 - $1;
+          last;
+        }
+      }
+      close(MPSTAT);
+
+      $cpu_usage eq -1 and die "Can't find CPU information";
+
+      printf "%.2f%%\n", $cpu_usage;
+      printf "%.2f%%\n", $cpu_usage;
+
+      if ($cpu_usage >= $t_crit) {
+        print "#FF0000\n"; exit 33;
+      } elsif ($cpu_usage >= $t_warn) {
+        print "#FFFC00\n";
+      }
+      exit 0;
+    '';
+  };
+
+  home.file.".config/i3blocks/scripts/cpu.sh" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      if [[ "$BLOCK_BUTTON" -eq 1 ]]; then
+        topproc=$(ps ax --sort=-pcpu --format 'command=' \
+          | head -n 1 | cut -f1 -d' ' | awk -F" +|/" '{print $NF}')
+        echo "<span foreground=\"#FFD000\">$topproc</span>"
+      else
+        output=$(~/.config/i3blocks/scripts/cpu_usage | head -n 1 | cut -f1 -d'.')
+        if   [[ "$output" -lt 20 ]]; then color="#ADFF00"; squares="■"
+        elif [[ "$output" -lt 40 ]]; then color="#E4FF00"; squares="■■"
+        elif [[ "$output" -lt 60 ]]; then color="#FFD000"; squares="■■■"
+        elif [[ "$output" -lt 80 ]]; then color="#FFB923"; squares="■■■■"
+        else                              color="#FF0027"; squares="■■■■■"
+        fi
+        echo "<span foreground=\"$color\">$squares</span>"
+      fi
+    '';
+  };
+
+  home.file.".config/i3blocks/scripts/batterybar.sh" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      readarray -t output <<< $(acpi battery)
+      battery_count=''${#output[@]}
+
+      for line in "''${output[@]}"; do
+        percentages+=($(echo "$line" | grep -o -m1 '[0-9]\{1,3\}%' | tr -d '%'))
+        statuses+=($(echo "$line" | grep -E -o -m1 'Discharging|Charging|AC|Full|Unknown'))
+        remaining=$(echo "$line" | grep -E -o -m1 '[0-9][0-9]:[0-9][0-9]')
+        remainings+=("''${remaining:+ ($remaining)}")
+      done
+
+      dis_colors=("#FF0027" "#FF3B05" "#FFB923" "#FFD000" "#E4FF00" "#ADFF00" "#6DFF00" "#10BA00")
+      charging_color="#00AFE3"
+      full_color="#FFFFFF"
+      ac_color="#535353"
+
+      end=$((battery_count - 1))
+      for i in $(seq 0 $end); do
+        pct=''${percentages[$i]}
+        if   (( pct <  20 )); then squares="■"
+        elif (( pct <  40 )); then squares="■■"
+        elif (( pct <  60 )); then squares="■■■"
+        elif (( pct <  80 )); then squares="■■■■"
+        else                       squares="■■■■■"
+        fi
+        (( pct < 10 )) && notify-send -u critical "Low battery!"
+
+        case "''${statuses[$i]}" in
+          Charging)  color="$charging_color" ;;
+          Full)      color="$full_color" ;;
+          AC)        color="$ac_color" ;;
+          *)
+            idx=$(( pct / 10 < 7 ? pct / 10 : 7 ))
+            color="''${dis_colors[$idx]}"
+            ;;
+        esac
+
+        (( end > 0 )) && message="$message $(($i + 1)):"
+        message="$message ''${statuses[$i]} <span foreground=\"$color\">''${pct}%''${remainings[$i]}</span>"
+      done
+      echo $message
+    '';
+  };
+
+  home.file.".config/i3blocks/scripts/keyindicator.sh" = {
+    executable = true;
+    text = ''
+      #!/bin/bash
+      KEY=''${BLOCK_INSTANCE:-CAPS}
+      STATE=$(xset q | grep -i "''${KEY}" | grep -oP '(on|off)' | tail -1)
+      if [[ "$STATE" == "on" ]]; then
+        echo "$KEY"
+        echo "$KEY"
+        echo \#FFD000
+      fi
+    '';
+  };
+
   # --- i3 scripts ---
   home.file.".config/i3/scripts/i3lockblur.sh" = {
     executable = true;
@@ -327,8 +702,7 @@
       startup = [
         { command = "nm-applet"; notification = false; }
         { command = "lxpolkit"; notification = false; }
-        { command = "gammastep"; notification = false; }
-        { command = "unclutter-xfixes -idle 2"; notification = false; }
+        { command = "unclutter -idle 2"; notification = false; }
         { command = "thunar --daemon"; notification = false; }
         { command = "udiskie --smart-tray --file-manager thunar"; notification = false; }
         { command = "xautolock -detectsleep -time 120 -locker '~/.config/i3/scripts/i3lockblur.sh' -notify 30 -notifier \"notify-send -u critical -t 5000 -- 'LOCKING screen in 30 seconds'\""; notification = false; }
