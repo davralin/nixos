@@ -221,9 +221,11 @@
           statusCommand = "i3blocks -c ~/.config/i3blocks/up.conf";
           position = "top";
           workspaceButtons = false;
-          bindingModeIndicator = false;
           trayOutput = "none";
-          outputs = [ "primary" ];
+          extraConfig = ''
+            binding_mode_indicator no
+            output primary
+          '';
           colors = {
             background = bg-color;
             separator  = "#757575";
