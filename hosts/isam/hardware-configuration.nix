@@ -5,8 +5,9 @@
     [ (modulesPath + "/profiles/qemu-guest.nix")
     ];
 
-  boot.initrd.availableKernelModules = [ "uhci_hcd" "ehci_pci" "ahci" "virtio_pci" "virtio_scsi" "sd_mod" "sr_mod" ];
+  boot.initrd.availableKernelModules = [ "uhci_hcd" "ehci_pci" "ahci" "virtio_pci" "virtio_scsi" "sd_mod" "sr_mod" "dm_mod" ];
   boot.initrd.kernelModules = [ "8250" ];
+  boot.initrd.services.lvm.enable = true;
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
