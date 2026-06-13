@@ -7,6 +7,7 @@
     ../../modules/impermanence-root.nix
     ../../modules/locale.nix
     ../../modules/mikr.nix
+    ../../modules/openzfs.nix
     ../../modules/ssh.nix
     ../../modules/sudo.nix
     ../../modules/unfree.nix
