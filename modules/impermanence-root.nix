@@ -17,6 +17,7 @@
       "/var/cache/fontconfig"
       "/var/lib/bluetooth"
       "/var/lib/dnsmasq"
+      "/var/lib/flatpak"
       "/var/lib/fwupd"
       "/var/lib/nixos"
       "/var/lib/tailscale"
