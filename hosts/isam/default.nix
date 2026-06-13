@@ -24,22 +24,11 @@
     allowDiscards = true;
   };
 
-  # ZFS data pool — auto-import, key loaded by systemd service below
+  # ZFS data pool — auto-import with force (to handle hostid mismatches from ISO usage)
   boot.zfs.extraPools = [ "rpool" ];
-
-  # Load ZFS encryption key from keyfile on encrypted ext4 /nix
-  # Runs after ZFS pool is imported, before datasets are mounted
-  systemd.services.zfs-load-key = {
-    description = "Load ZFS encryption keys";
-    after = [ "zfs-import.target" ];
-    before = [ "zfs-mount.service" ];
-    wantedBy = [ "zfs-mount.service" ];
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-      ExecStart = "${config.boot.zfs.package}/bin/zfs load-key -r -a";
-    };
-  };
+  boot.zfs.forceImportAll = true;
+  # Key is at keylocation=file:///nix/persist/zfs.key on the encrypted ext4 /nix
+  # NixOS ZFS infrastructure loads it automatically when /nix is mounted
 
   # Serial console for VM — ttyS0 last = preferred for input (LUKS passphrase reads from it)
   boot.kernelParams = [ "console=tty1" "console=ttyS0,115200n8" ];
