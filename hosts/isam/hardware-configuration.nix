@@ -7,7 +7,6 @@
 
   boot.initrd.availableKernelModules = [ "uhci_hcd" "ehci_pci" "ahci" "virtio_pci" "virtio_scsi" "sd_mod" "sr_mod" "dm_mod" ];
   boot.initrd.kernelModules = [ "8250" ];
-  boot.initrd.services.lvm2.enable = true;
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
@@ -18,13 +17,13 @@
   };
 
   fileSystems."/nix" = {
-    device = "/dev/disk/by-id/dm-name-base--nix";
+    device = "/dev/base/nix";
     fsType = "ext4";
     neededForBoot = true;
   };
 
   fileSystems."/home" = {
-    device = "/dev/disk/by-id/dm-name-base--home";
+    device = "/dev/base/home";
     fsType = "ext4";
   };
 
@@ -35,7 +34,7 @@
   };
 
   swapDevices = [
-    { device = "/dev/disk/by-id/dm-name-base--swap"; }
+    { device = "/dev/base/swap"; }
   ];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
