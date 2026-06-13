@@ -26,6 +26,7 @@
       ../../modules/rsnapshot.nix
       ../../modules/samba.nix
       ../../modules/ssh.nix
+      ../../modules/tailscale.nix
       ../../modules/sudo.nix
       ../../modules/unfree.nix
     ];

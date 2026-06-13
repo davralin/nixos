@@ -19,6 +19,7 @@
       "/var/lib/dnsmasq"
       "/var/lib/fwupd"
       "/var/lib/nixos"
+      "/var/lib/tailscale"
     ];
     files = [
       "/etc/machine-id"
