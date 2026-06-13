@@ -4,6 +4,7 @@
   imports = [
     ./hardware-configuration.nix
     ../../modules/common.nix
+    ../../modules/desktop-i3.nix
     ../../modules/impermanence-root.nix
     ../../modules/locale.nix
     ../../modules/mikr.nix
