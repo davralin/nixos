@@ -40,6 +40,9 @@
     };
   };
 
+  # Serial console for VM — LUKS prompt visible over serial
+  boot.kernelParams = [ "console=ttyS0,115200n8" "console=tty1" ];
+
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
