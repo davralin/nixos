@@ -25,12 +25,10 @@
 
   # Flatpak — for Buffer
   services.flatpak.enable = true;
+  xdg.portal.enable = true;
 
   # Steam
   programs.steam.enable = true;
-
-  # Brightness without sudo
-  programs.light.enable = true;
 
   # Thunar + plugins
   programs.thunar.enable = true;

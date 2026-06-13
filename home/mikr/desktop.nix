@@ -277,8 +277,8 @@
         "Control+Print"           = "exec --no-startup-id flameshot gui";
 
         # Brightness
-        "XF86MonBrightnessUp"     = "exec light -A 5";
-        "XF86MonBrightnessDown"   = "exec light -U 5";
+        "XF86MonBrightnessUp"     = "exec brightnessctl set +5%";
+        "XF86MonBrightnessDown"   = "exec brightnessctl set 5%-";
 
         # Volume
         "XF86AudioRaiseVolume"    = "exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%";
