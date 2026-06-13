@@ -33,7 +33,7 @@
 
   # Thunar + plugins
   programs.thunar.enable = true;
-  programs.thunar.plugins = with pkgs.xfce; [
+  programs.thunar.plugins = with pkgs; [
     thunar-archive-plugin
     thunar-volman
   ];
@@ -44,7 +44,7 @@
   fonts.packages = with pkgs; [
     hack-font
     noto-fonts
-    noto-fonts-emoji
+    noto-fonts-color-emoji
   ];
 
   # System packages — tools needed system-wide or used in i3 scripts/autoruns
@@ -53,7 +53,7 @@
     i3blocks
     i3lock
     autorandr
-    xorg.xrandr
+    xrandr
     arandr
 
     # Screen locker deps
