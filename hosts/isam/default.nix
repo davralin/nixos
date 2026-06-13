@@ -34,8 +34,11 @@
 
   # Hibernation — swap is on LVM-on-LUKS (/dev/mapper/base-swap, ~10G > 8G RAM)
   # boot.resumeDevice alone doesn't suppress nohibernate for dm paths; must disable protectKernelImage
+  # ZFS adds nohibernate by default (pool corruption risk); unsafeAllowHibernation overrides it.
+  # Risk: if system crashes post-hibernate before ZFS sync, rpool data could corrupt. Acceptable for VM.
   boot.resumeDevice = "/dev/mapper/base-swap";
   security.protectKernelImage = false;
+  boot.zfs.unsafeAllowHibernation = true;
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
