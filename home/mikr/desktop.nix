@@ -84,7 +84,6 @@
     inactiveOpacity = 0.9;
     activeOpacity = 1.0;
     settings = {
-      glx-no-stencil = true;
       mark-wmwin-focused = true;
       use-ewmh-active-win = true;
       detect-rounded-corners = true;
