@@ -681,6 +681,9 @@
 
         # Calculator scratchpad
         "${modifier}+c" = "[class=\"SpeedCrunch\"] scratchpad show; move position mouse";
+
+        # CapsLock indicator — signal i3blocks to refresh keyindicator block
+        "--release Caps_Lock" = "exec pkill -SIGRTMIN+11 i3blocks";
       };
 
       assigns = {

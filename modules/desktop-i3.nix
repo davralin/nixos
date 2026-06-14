@@ -82,6 +82,7 @@
     # Input / X utils
     xdotool
     brightnessctl
+    libnotify             # notify-send
 
     # Audio
     pavucontrol
