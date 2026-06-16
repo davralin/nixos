@@ -8,9 +8,13 @@
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    disko = {
+      url = "github:nix-community/disko/latest";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, impermanence, home-manager, ... }@inputs:
+  outputs = { self, nixpkgs, impermanence, home-manager, disko, ... }@inputs:
   let
     mkHost = hostName: nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
@@ -24,6 +28,7 @@
       home-nas = mkHost "home-nas";
       away-nas = mkHost "away-nas";
       isam     = mkHost "isam";
+      hermes   = mkHost "hermes";
     };
   };
 }
