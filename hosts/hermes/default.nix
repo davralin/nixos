@@ -22,6 +22,7 @@
       main = {
         type = "disk";
         device = "/dev/vda";
+        imageSize = "5G";
         content = {
           type = "gpt";
           partitions = {
