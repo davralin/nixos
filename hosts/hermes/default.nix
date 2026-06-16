@@ -74,21 +74,25 @@
   boot.initrd.systemd.enable = true;
 
   # Btrfs rollback: wipe / on every boot via systemd initrd service
+  # Uses partition label set by disko (disk-main-root)
   boot.initrd.systemd.services.rollback = {
     description = "Rollback btrfs root subvolume";
     wantedBy = [ "initrd.target" ];
-    after = [ "dev-vda2.device" ];
+    after = [ "dev-disk-by\\x2dpartlabel-disk\\x2dmain\\x2droot.device" ];
     before = [ "sysroot.mount" ];
     unitConfig.DefaultDependencies = "no";
     serviceConfig.Type = "oneshot";
     script = ''
       mkdir -p /mnt
-      mount -t btrfs -o subvol=/ /dev/vda2 /mnt
+      mount -t btrfs -o subvol=/ /dev/disk/by-partlabel/disk-main-root /mnt
 
-      # Delete nested subvolumes under @ first (bottom-up)
-      btrfs subvolume list -o /mnt/@ | awk '{print $NF}' | while read subvol; do
-        btrfs subvolume delete "/mnt/$subvol" || true
-      done
+      # Delete nested subvolumes under @ bottom-up (sorted by depth, deepest first)
+      btrfs subvolume list -o /mnt/@ \
+        | sort -rk9 \
+        | awk '{print $NF}' \
+        | while read subvol; do
+            btrfs subvolume delete "/mnt/$subvol" || true
+          done
 
       # Delete @ itself and recreate fresh
       btrfs subvolume delete /mnt/@
