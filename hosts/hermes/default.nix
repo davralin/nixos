@@ -75,6 +75,7 @@
 
   # Btrfs rollback: wipe / on every boot via systemd initrd service
   # Uses partition label set by disko (disk-main-root)
+  # Uses btrfs subvolume delete --recursive to handle nested subvolumes
   boot.initrd.systemd.services.rollback = {
     description = "Rollback btrfs root subvolume";
     wantedBy = [ "initrd.target" ];
@@ -86,16 +87,9 @@
       mkdir -p /mnt
       mount -t btrfs -o subvol=/ /dev/disk/by-partlabel/disk-main-root /mnt
 
-      # Delete nested subvolumes under @ bottom-up (sorted by depth, deepest first)
-      btrfs subvolume list -o /mnt/@ \
-        | sort -rk9 \
-        | awk '{print $NF}' \
-        | while read subvol; do
-            btrfs subvolume delete "/mnt/$subvol" || true
-          done
+      # btrfs subvolume delete --recursive handles nested subvolumes automatically
+      btrfs subvolume delete --recursive /mnt/@
 
-      # Delete @ itself and recreate fresh
-      btrfs subvolume delete /mnt/@
       btrfs subvolume create /mnt/@
 
       umount /mnt
