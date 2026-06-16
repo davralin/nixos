@@ -66,23 +66,36 @@
     };
   };
 
-  # Btrfs rollback: wipe / on every boot by deleting and recreating the @ subvolume
-  boot.initrd.supportedFilesystems = [ "btrfs" ];
-  boot.initrd.postDeviceCommands = pkgs.lib.mkAfter ''
-    mkdir -p /mnt
-    mount -t btrfs -o subvol=/ /dev/vda2 /mnt
+  # Mark /nix/persist as needed for boot (required by impermanence)
+  fileSystems."/nix/persist".neededForBoot = true;
 
-    # Delete nested subvolumes under @ first (bottom-up)
-    btrfs subvolume list -o /mnt/@ | awk '{print $NF}' | while read subvol; do
-      btrfs subvolume delete "/mnt/$subvol" || true
-    done
+  # Use systemd initrd
+  boot.initrd.systemd.enable = true;
 
-    # Delete @ itself and recreate fresh
-    btrfs subvolume delete /mnt/@
-    btrfs subvolume create /mnt/@
+  # Btrfs rollback: wipe / on every boot via systemd initrd service
+  boot.initrd.systemd.services.rollback = {
+    description = "Rollback btrfs root subvolume";
+    wantedBy = [ "initrd.target" ];
+    after = [ "dev-vda2.device" ];
+    before = [ "sysroot.mount" ];
+    unitConfig.DefaultDependencies = "no";
+    serviceConfig.Type = "oneshot";
+    script = ''
+      mkdir -p /mnt
+      mount -t btrfs -o subvol=/ /dev/vda2 /mnt
 
-    umount /mnt
-  '';
+      # Delete nested subvolumes under @ first (bottom-up)
+      btrfs subvolume list -o /mnt/@ | awk '{print $NF}' | while read subvol; do
+        btrfs subvolume delete "/mnt/$subvol" || true
+      done
+
+      # Delete @ itself and recreate fresh
+      btrfs subvolume delete /mnt/@
+      btrfs subvolume create /mnt/@
+
+      umount /mnt
+    '';
+  };
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
