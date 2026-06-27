@@ -24,8 +24,12 @@
       "20-enp2s0" = {
         matchConfig.Name = "enp2s0";
         networkConfig = {
-          DHCP = "ipv4";
-          IPv6AcceptRA = false;
+          DHCP = "yes";
+          IPv6AcceptRA = true;
+        };
+        dhcpV6Config = {
+          PrefixDelegationHint = "::/60";
+          WithoutRA = "solicit";
         };
       };
     };
