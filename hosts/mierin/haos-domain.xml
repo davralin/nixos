@@ -1,6 +1,6 @@
 <domain type='kvm'>
   <name>haos</name>
-  <uuid>3a86818f-4051-4406-bc98-8e7adebc4cf2</uuid>
+  <uuid>847a2c13-04ed-4901-a56f-63929e4cdeb2</uuid>
   <memory unit='KiB'>4194304</memory>
   <currentMemory unit='KiB'>4194304</currentMemory>
   <vcpu placement='static'>4</vcpu>
@@ -45,7 +45,7 @@
     <controller type='ide' index='0'/>
     <controller type='virtio-serial' index='0'/>
     <interface type='bridge'>
-      <mac address='52:54:00:4d:56:7d'/>
+      <mac address='52:54:00:39:cb:84'/>
       <source bridge='lan'/>
       <model type='e1000'/>
     </interface>
