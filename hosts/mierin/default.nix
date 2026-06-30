@@ -24,12 +24,6 @@
       ../../modules/unfree.nix
     ];
 
-  # Packages for KVM/libvirt
-  environment.systemPackages = with pkgs; [
-    OVMF
-    virt-manager
-  ];
-
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
