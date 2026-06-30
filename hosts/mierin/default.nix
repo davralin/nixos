@@ -12,6 +12,7 @@
       ../../modules/common.nix
       ../../modules/garbage-collect.nix
       ../../modules/impermanence-root.nix
+      ../../modules/libvirtd.nix
       ../../modules/locale.nix
       ../../modules/mikr.nix
       ../../modules/node-exporter.nix
@@ -22,6 +23,12 @@
       ../../modules/sudo.nix
       ../../modules/unfree.nix
     ];
+
+  # Packages for KVM/libvirt
+  environment.systemPackages = with pkgs; [
+    OVMF
+    virt-manager
+  ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
