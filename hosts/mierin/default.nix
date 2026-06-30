@@ -31,6 +31,21 @@
   networking.hostName = "Mierin";
   networking.useDHCP = false;
 
+  # Define HAOS VM in libvirt after boot (persists across tmpfs /etc/libvirt/qemu)
+  systemd.services.define-haos-vm = {
+    description = "Define HAOS VM in libvirt";
+    after = [ "libvirtd.service" ];
+    wants = [ "libvirtd.service" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig.Type = "oneshot";
+    script = ''
+      if [ ! -f /opt/local/vms/haos_VARS.fd ]; then
+        cp /run/libvirt/nix-ovmf/edk2-i386-vars.fd /opt/local/vms/haos_VARS.fd
+      fi
+      ${pkgs.libvirt}/bin/virsh define ${./haos-domain.xml}
+    '';
+  };
+
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It's perfectly fine and recommended to leave
