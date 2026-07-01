@@ -1,6 +1,6 @@
 <domain type='kvm'>
   <name>haos</name>
-  <uuid>847a2c13-04ed-4901-a56f-63929e4cdeb2</uuid>
+  <uuid>4c1e6b9b-5b98-425f-97f6-0d2254bc3626</uuid>
   <memory unit='KiB'>4194304</memory>
   <currentMemory unit='KiB'>4194304</currentMemory>
   <vcpu placement='static'>4</vcpu>
@@ -36,7 +36,7 @@
     <emulator>/run/libvirt/nix-emulators/qemu-system-x86_64</emulator>
     <disk type='file' device='disk'>
       <driver name='qemu' type='qcow2'/>
-      <source file='/opt/local/vms/haos_ova-18.0.qcow2'/>
+      <source file='/opt/local/vms/haos_ova-18.1.qcow2'/>
       <target dev='hda' bus='ide'/>
       <address type='drive' controller='0' bus='0' target='0' unit='0'/>
     </disk>
