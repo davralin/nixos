@@ -43,9 +43,6 @@
         cp /run/libvirt/nix-ovmf/edk2-i386-vars.fd /opt/local/vms/haos_VARS.fd
       fi
       ${pkgs.libvirt}/bin/virsh define ${./haos-domain.xml}
-      if ! ${pkgs.libvirt}/bin/virsh dominfo haos 2>/dev/null | grep -q 'State.*running'; then
-        ${pkgs.libvirt}/bin/virsh start haos
-      fi
     '';
   };
 
