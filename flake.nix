@@ -12,9 +12,10 @@
       url = "github:nix-community/disko/latest";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    hermes-agent.url = "github:NousResearch/hermes-agent";
   };
 
-  outputs = { self, nixpkgs, impermanence, home-manager, disko, ... }@inputs:
+  outputs = { self, nixpkgs, impermanence, home-manager, disko, hermes-agent, ... }@inputs:
   let
     mkHost = hostName: nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
