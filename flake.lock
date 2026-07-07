@@ -98,6 +98,21 @@
         "type": "github"
       }
     },
+    "hermes-agent": {
+      "inputs": {},
+      "locked": {
+        "lastModified": 1783428608,
+        "owner": "NousResearch",
+        "repo": "hermes-agent",
+        "rev": "afb5808d8c9e0418ab14107a1c1f8b5598d6489b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NousResearch",
+        "repo": "hermes-agent",
+        "type": "github"
+      }
+    },
     "nixpkgs_2": {
       "locked": {
         "lastModified": 1783148766,
@@ -117,6 +132,7 @@
     "root": {
       "inputs": {
         "disko": "disko",
+        "hermes-agent": "hermes-agent",
         "home-manager": "home-manager",
         "impermanence": "impermanence",
         "nixpkgs": "nixpkgs_2"

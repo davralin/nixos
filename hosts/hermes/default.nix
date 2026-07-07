@@ -14,6 +14,7 @@
     ../../modules/garbage-collect.nix
     ../../modules/auto-update.nix
     ../../modules/node-exporter.nix
+    ../../modules/signal-cli.nix
   ];
 
   # Disko disk layout
@@ -104,6 +105,37 @@
 
   # QEMU guest agent
   services.qemuGuest.enable = true;
+
+  users.users.hermes = {
+    isSystemUser = true;
+    group = "hermes";
+    home = "/nix/persist/hermes";
+    createHome = true;
+  };
+
+  users.groups.hermes = {};
+
+  systemd.services.hermes-agent = {
+    description = "Hermes AI Agent";
+    after = [ "network-online.target" "signal-cli.service" ];
+    wants = [ "network-online.target" ];
+    wantedBy = [ "multi-user.target" ];
+    environment = {
+      HERMES_HOME = "/nix/persist/hermes";
+      HERMES_DASHBOARD = "1";
+      SEARXNG_URL = "http://searxng.searxng.svc.cluster.local:8080";
+      SIGNAL_HTTP_URL = "http://127.0.0.1:8080";
+      HASS_URL = "https://home.ralin.org";
+    };
+    serviceConfig = {
+      ExecStart = "${inputs.hermes-agent.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/hermes gateway run";
+      User = "hermes";
+      Group = "hermes";
+      Restart = "on-failure";
+      RestartSec = 10;
+      EnvironmentFile = "-/nix/persist/secrets/hermes-env";
+    };
+  };
 
   networking.hostName = "hermes";
 
