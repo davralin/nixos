@@ -59,6 +59,10 @@
                     mountpoint = "/home";
                     mountOptions = [ "compress=zstd" ];
                   };
+                  "@tmp" = {
+                    mountpoint = "/tmp";
+                    mountOptions = [ "compress=zstd" ];
+                  };
                 };
               };
             };
@@ -90,8 +94,10 @@
 
       # btrfs subvolume delete --recursive handles nested subvolumes automatically
       btrfs subvolume delete --recursive /mnt/@
+      btrfs subvolume delete --recursive /mnt/@tmp
 
       btrfs subvolume create /mnt/@
+      btrfs subvolume create /mnt/@tmp
 
       umount /mnt
     '';
