@@ -93,8 +93,8 @@
       mount -t btrfs -o subvol=/ /dev/disk/by-partlabel/disk-main-root /mnt
 
       # btrfs subvolume delete --recursive handles nested subvolumes automatically
-      btrfs subvolume delete --recursive /mnt/@
-      btrfs subvolume delete --recursive /mnt/@tmp
+      btrfs subvolume delete --recursive /mnt/@ 2>/dev/null || true
+      btrfs subvolume delete --recursive /mnt/@tmp 2>/dev/null || true
 
       btrfs subvolume create /mnt/@
       btrfs subvolume create /mnt/@tmp
