@@ -99,6 +99,9 @@
       btrfs subvolume create /mnt/@
       btrfs subvolume create /mnt/@tmp
 
+      # Set proper permissions so non-root users can write to /tmp
+      chmod 1777 /mnt/@tmp
+
       umount /mnt
     '';
   };
