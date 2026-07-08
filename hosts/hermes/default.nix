@@ -112,6 +112,10 @@
   # QEMU guest agent
   services.qemuGuest.enable = true;
 
+  # zram swap for build memory safety
+  zramSwap.enable = true;
+  zramSwap.memoryPercent = 50;
+
   users.users.hermes = {
     isSystemUser = true;
     group = "hermes";
