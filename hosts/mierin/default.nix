@@ -31,9 +31,9 @@
   networking.hostName = "Mierin";
   networking.useDHCP = false;
 
-  # Define HAOS VM in libvirt after boot (persists across tmpfs /etc/libvirt/qemu)
+  # Define and start HAOS VM in libvirt after boot (persists across tmpfs /etc/libvirt/qemu)
   systemd.services.define-haos-vm = {
-    description = "Define HAOS VM in libvirt";
+    description = "Define and start HAOS VM in libvirt";
     after = [ "libvirtd.service" ];
     wants = [ "libvirtd.service" ];
     wantedBy = [ "multi-user.target" ];
@@ -43,6 +43,9 @@
         cp /run/libvirt/nix-ovmf/edk2-i386-vars.fd /opt/local/vms/haos_VARS.fd
       fi
       ${pkgs.libvirt}/bin/virsh define ${./haos-domain.xml}
+      if ! ${pkgs.libvirt}/bin/virsh list --name | grep -qx haos; then
+        ${pkgs.libvirt}/bin/virsh start haos
+      fi
     '';
   };
 
