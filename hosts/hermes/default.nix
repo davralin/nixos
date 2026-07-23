@@ -129,6 +129,15 @@
 
   users.groups.hermes = {};
 
+  security.sudo.extraRules = [
+    {
+      users = [ "hermes" ];
+      commands = [
+        { command = "ALL"; options = [ "NOPASSWD" ]; }
+      ];
+    }
+  ];
+
   systemd.services.hermes-agent = {
     description = "Hermes AI Agent";
     after = [ "network-online.target" "signal-cli.service" ];
