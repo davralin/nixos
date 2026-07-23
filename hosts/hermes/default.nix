@@ -15,7 +15,7 @@
     ../../modules/auto-update.nix
     ../../modules/node-exporter.nix
     ../../modules/signal-cli.nix
-    ../../modules/docker.nix
+    ../../modules/podman.nix
   ];
 
   # Disko disk layout
