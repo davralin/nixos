@@ -15,6 +15,7 @@
     ../../modules/auto-update.nix
     ../../modules/node-exporter.nix
     ../../modules/signal-cli.nix
+    ../../modules/docker.nix
   ];
 
   # Disko disk layout
@@ -149,6 +150,8 @@
       EnvironmentFile = "-/nix/persist/secrets/hermes-env";
     };
   };
+
+  environment.systemPackages = with pkgs; [ opencode claude-code ];
 
   networking.hostName = "hermes";
 
