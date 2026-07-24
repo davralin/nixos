@@ -146,9 +146,7 @@
     environment = {
       HERMES_HOME = "/nix/persist/hermes";
       HERMES_DASHBOARD = "1";
-      SEARXNG_URL = "http://REDACTED:8080";
       SIGNAL_HTTP_URL = "http://127.0.0.1:8080";
-      HASS_URL = "https://REDACTED";
     };
     serviceConfig = {
       ExecStart = "${inputs.hermes-agent.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/hermes gateway run";
