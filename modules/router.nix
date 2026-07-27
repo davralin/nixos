@@ -161,6 +161,12 @@
           destination = "10.0.1.38:9500";
         }
         {
+          # slskd
+          sourcePort = 50300;
+          proto = "tcp";
+          destination = "10.0.1.32:50300";
+        }
+        {
           # syncthing
           sourcePort = 22000;
           proto = "tcp";
