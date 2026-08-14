@@ -7,6 +7,7 @@
       ../../modules/secrets/mierin.nix
       ../../modules/secrets/nullmailer.nix
       ../../modules/acme.nix
+      ../../modules/adguardhome.nix
       ../../modules/ansible.nix
       ../../modules/auto-update.nix
       ../../modules/common.nix

@@ -47,6 +47,8 @@
         allowedTCPPorts = [
           22 # SSH
           53 # DNSmasq
+          80 # AdGuard Home UI/API
+          3053 # AdGuard Home test DNS
           5001 # Docker Registry pull-through cache
           9100 # node-exporter
           9153 # node-exporter for DNSmasq
@@ -56,6 +58,7 @@
           53 # DNSmasq
           67 # DNSmasq-dhcp
           69 # DNSmasq-tftp
+          3053 # AdGuard Home test DNS
         ];
       };
       wg0 = {

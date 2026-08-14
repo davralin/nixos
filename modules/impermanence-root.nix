@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, ... }:
+{ config, pkgs, inputs, lib, ... }:
 
 {
   imports = [ inputs.impermanence.nixosModules.impermanence ];
@@ -21,6 +21,11 @@
       "/var/lib/fwupd"
       "/var/lib/nixos"
       "/var/lib/tailscale"
+    ] ++ lib.optionals config.services.adguardhome.enable [
+      {
+        directory = "/var/lib/private/AdGuardHome";
+        mode = "0700";
+      }
     ];
     files = [
       "/etc/machine-id"
