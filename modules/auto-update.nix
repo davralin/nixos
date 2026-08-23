@@ -20,9 +20,14 @@
   };
 
   systemd.services."git-pull-nixos" = {
+    path = with pkgs; [
+      git
+      git-crypt
+    ];
+
     script = ''
       cd /nix/persist/nixos
-      ${pkgs.git}/bin/git pull --rebase
+      git pull --rebase
     '';
     serviceConfig = {
       Type = "oneshot";
