@@ -30,6 +30,7 @@
       away-nas = mkHost "away-nas";
       isam     = mkHost "isam";
       hermes   = mkHost "hermes";
+      wow      = mkHost "wow";
     };
   };
 }
