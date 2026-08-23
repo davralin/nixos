@@ -29,7 +29,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "Mierin";
+  networking.hostName = "mierin";
   networking.useDHCP = false;
 
   # Define and start HAOS VM in libvirt after boot (persists across tmpfs /etc/libvirt/qemu)
