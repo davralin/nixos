@@ -21,7 +21,6 @@
 
   systemd.services."git-pull-nixos" = {
     script = ''
-      set -eu
       cd /nix/persist/nixos
       ${pkgs.git}/bin/git pull --rebase
     '';
