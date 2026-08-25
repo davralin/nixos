@@ -12,10 +12,9 @@
       url = "github:nix-community/disko/latest";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    hermes-agent.url = "github:NousResearch/hermes-agent/81eaedd0f5c471c7ee748990066135a684f3c962";
   };
 
-  outputs = { self, nixpkgs, impermanence, home-manager, disko, hermes-agent, ... }@inputs:
+  outputs = { self, nixpkgs, impermanence, home-manager, disko, ... }@inputs:
   let
     mkHost = hostName: nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
@@ -29,7 +28,6 @@
       home-nas = mkHost "home-nas";
       away-nas = mkHost "away-nas";
       isam     = mkHost "isam";
-      hermes   = mkHost "hermes";
       wow      = mkHost "wow";
     };
   };
