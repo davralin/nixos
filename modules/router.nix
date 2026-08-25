@@ -46,28 +46,26 @@
       lan = {
         allowedTCPPorts = [
           22 # SSH
-          53 # DNSmasq
+          53 # AdGuard Home DNS
           80 # AdGuard Home UI/API
-          3053 # AdGuard Home test DNS
           5001 # Docker Registry pull-through cache
           9100 # node-exporter
           9153 # node-exporter for DNSmasq
           9586 # node-exporter for WireGuard
         ];
         allowedUDPPorts = [
-          53 # DNSmasq
+          53 # AdGuard Home DNS
           67 # DNSmasq-dhcp
           69 # DNSmasq-tftp
-          3053 # AdGuard Home test DNS
         ];
       };
       wg0 = {
         allowedTCPPorts = [
           22 # SSH
-          53 # DNSmasq
+          53 # AdGuard Home DNS
         ];
         allowedUDPPorts = [
-          53 # DNSmasq
+          53 # AdGuard Home DNS
         ];
       };
     };
@@ -260,6 +258,7 @@
     dnsmasq = {
       enable = true;
       settings = {
+        port = 5354;
         enable-tftp = true;
         tftp-root = "/opt/netboot";
         dhcp-match = [
