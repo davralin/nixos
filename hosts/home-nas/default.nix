@@ -10,7 +10,6 @@
       ../../modules/backup-k8s.nix
       ../../modules/common.nix
       ../../modules/docker.nix
-      ../../modules/docker-adguard.nix
       ../../modules/docker-garage.nix
       ../../modules/garbage-collect.nix
       ../../modules/impermanence-root.nix
