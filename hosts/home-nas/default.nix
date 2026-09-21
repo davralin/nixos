@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 {
   imports =
@@ -57,6 +57,8 @@
 
   # Allow on all one interfaces
   services.prometheus.exporters.node.openFirewall = true;
+
+  system.autoUpgrade.enable = lib.mkForce false;
 
   # Bootloader.
   # Use the systemd-boot EFI boot loader.
