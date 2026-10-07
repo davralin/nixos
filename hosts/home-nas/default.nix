@@ -8,7 +8,7 @@
       ./hardware-configuration.nix
       ../../modules/secrets/nullmailer.nix
       ../../modules/ansible.nix
-#      ../../modules/auto-update.nix
+      ../../modules/auto-update.nix
       ../../modules/backup-k8s.nix
       ../../modules/common.nix
       ../../modules/garbage-collect.nix
@@ -18,7 +18,7 @@
       ../../modules/node-exporter.nix
       ../../modules/openzfs.nix
       ../../modules/physical.nix
-#      ../../modules/rclone-backup.nix
+      ../../modules/rclone-backup.nix
       ../../modules/rsnapshot.nix
       ../../modules/ssh.nix
       ../../modules/sudo.nix
