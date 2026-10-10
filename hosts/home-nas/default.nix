@@ -12,6 +12,7 @@
       ../../modules/backup-k8s.nix
       ../../modules/common.nix
       ../../modules/garbage-collect.nix
+      ../../modules/garage.nix
       ../../modules/impermanence-root.nix
       ../../modules/locale.nix
       ../../modules/mikr.nix
@@ -61,6 +62,19 @@
     hostName = "home-nas";
     hostId = "3f784dab"; # for OpenZFS
   };
+
+  systemd.mounts = [
+    {
+      what = "/opt/local/garage";
+      where = "/var/lib/private/garage";
+      type = "none";
+      options = "bind";
+      requires = [ "opt-local.mount" ];
+      after = [ "opt-local.mount" ];
+      before = [ "garage.service" ];
+      requiredBy = [ "garage.service" ];
+    }
+  ];
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
