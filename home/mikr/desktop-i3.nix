@@ -7,6 +7,8 @@
 
   # User packages
   home.packages = with pkgs; [
+    gnupg
+    pinentry-curses
     discord
     signal-desktop
     speedcrunch
@@ -17,6 +19,11 @@
     xsel
     pavucontrol
   ];
+
+  home.file.".gnupg/gpg-agent.conf".text = ''
+    enable-ssh-support
+    pinentry-program ${pkgs.pinentry-curses}/bin/pinentry-curses
+  '';
 
   # --- Alacritty ---
   programs.alacritty = {
