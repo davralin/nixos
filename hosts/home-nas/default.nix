@@ -6,6 +6,8 @@
       inputs.disko.nixosModules.disko
       ./disko.nix
       ./hardware-configuration.nix
+      ../../modules/acme.nix
+      ../../modules/secrets/home-nas.nix
       ../../modules/secrets/nullmailer.nix
       ../../modules/ansible.nix
       ../../modules/auto-update.nix
@@ -13,6 +15,7 @@
       ../../modules/common.nix
       ../../modules/garbage-collect.nix
       ../../modules/garage.nix
+      ../../modules/haproxy.nix
       ../../modules/impermanence-root.nix
       ../../modules/locale.nix
       ../../modules/mikr.nix
