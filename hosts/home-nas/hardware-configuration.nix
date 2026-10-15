@@ -8,8 +8,20 @@
 
   boot.initrd.availableKernelModules = [ "xhci_pci" "nvme" "ahci" "usbhid" "usb_storage" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "kvm-intel" ];
+  boot.kernelModules = [ "kvm-intel" "iTCO_wdt" "it87_wdt" ];
   boot.extraModulePackages = [ ];
+  boot.extraModprobeConfig = ''
+    # The DXP4800 Plus BIOS watchdog is provided by the IT8613 Super I/O.
+    options it87_wdt timeout=180
+  '';
+
+  # Use the BIOS watchdog through systemd PID 1. The Intel PCH watchdog does
+  # not feed the separate BIOS timer.
+  systemd.settings.Manager = {
+    WatchdogDevice = "/dev/watchdog2";
+    RuntimeWatchdogSec = "60s";
+    RebootWatchdogSec = "10min";
+  };
 
   fileSystems."/" =
     { device = "none";
