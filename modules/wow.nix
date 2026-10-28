@@ -104,8 +104,8 @@ in
           environment:
             AC_PLAYERBOTS_UPDATES_ENABLE_DATABASES: "1"
             AC_AI_PLAYERBOT_RANDOM_BOT_AUTOLOGIN: "1"
-            AC_AI_PLAYERBOT_MIN_RANDOM_BOTS: "1600"
-            AC_AI_PLAYERBOT_MAX_RANDOM_BOTS: "2000"
+            AC_AI_PLAYERBOT_MIN_RANDOM_BOTS: "400"
+            AC_AI_PLAYERBOT_MAX_RANDOM_BOTS: "500"
           volumes:
             - ./modules:/azerothcore/modules:ro
           ports:
